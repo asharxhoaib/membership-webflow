@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Membership Tools</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="./panel.css" />
+</head>
+<body>
+  <div class="app">
+    <header>
+      <h1>Membership Tools</h1>
+      <p class="muted">Tiers, gating rules, member management and the member directory.</p>
+    </header>
+
+    <section id="connect" class="card hidden">
+      <h2>Connect</h2>
+      <p class="muted">Paste the site ID and admin token shown after installation.</p>
+      <div class="row">
+        <input id="conn-site" placeholder="Site ID" />
+        <input id="conn-token" placeholder="Admin token" type="password" />
+        <button id="conn-save" class="btn primary">Connect</button>
+      </div>
+    </section>
+
+    <div id="main" class="hidden">
+      <nav class="tabs" id="tabs">
+        <button data-tab="members" class="active">Members</button>
+        <button data-tab="requests">Requests <span id="req-badge" class="badge hidden"></span></button>
+        <button data-tab="rules">Gating rules</button>
+        <button data-tab="tiers">Tiers</button>
+        <button data-tab="fields">Directory fields</button>
+        <button data-tab="audit">Audit log</button>
+      </nav>
+      <div id="notice" class="notice hidden"></div>
+
+      <section data-panel="members" class="card">
+        <div class="row">
+          <input id="m-search" placeholder="Search name or email" />
+          <select id="m-tier-filter"></select>
+          <button id="m-refresh" class="btn">Search</button>
+          <button id="m-sync" class="btn">Re-sync from Webflow</button>
+        </div>
+        <div class="row">
+          <select id="bulk-tier"></select>
+          <button id="bulk-apply" class="btn primary">Apply tier to selected</button>
+          <span id="m-count" class="muted"></span>
+        </div>
+        <table class="grid">
+          <thead><tr><th><input type="checkbox" id="m-all" /></th><th>Member</th><th>Tier</th><th>Joined</th><th>Directory</th><th>Pending</th><th></th></tr></thead>
+          <tbody id="m-body"></tbody>
+        </table>
+        <div class="row"><button id="m-prev" class="btn">Previous</button><span id="m-page" class="muted"></span><button id="m-next" class="btn">Next</button></div>
+      </section>
+
+      <section data-panel="requests" class="card hidden">
+        <h2>Pending tier-change requests</h2>
+        <p class="muted">Members request changes from the portal. No payment is processed; approve after you have confirmed billing.</p>
+        <table class="grid"><thead><tr><th>Member</th><th>From</th><th>To</th><th>Requested</th><th></th></tr></thead><tbody id="r-body"></tbody></table>
+      </section>
+
+      <section data-panel="rules" class="card hidden">
+        <h2>Gating rules</h2>
+        <table class="grid"><thead><tr><th>Label</th><th>Element ID</th><th>Page</th><th>Mode</th><th>Critical</th><th></th></tr></thead><tbody id="g-body"></tbody></table>
+        <h3 id="g-form-title">New rule</h3>
+        <div class="form">
+          <div class="row">
+            <button id="g-pick" class="btn">Use selected element</button>
+            <code id="g-element">No element selected</code>
+          </div>
+          <input id="g-label" placeholder="Label (e.g. Pricing table)" />
+          <input id="g-page" placeholder="Page path (/pricing) or * for every page" value="*" />
+          <select id="g-mode">
+            <option value="tiers">Visible to selected tiers</option>
+            <option value="blur_cta">Blurred with CTA for non-members</option>
+            <option value="after_days">Visible after member is active N days</option>
+          </select>
+          <div id="g-tiers" class="checks"></div>
+          <input id="g-days" type="number" min="0" placeholder="Minimum days active" />
+          <select id="g-deny">
+            <option value="hide">Hide when denied</option>
+            <option value="blur">Blur with CTA when denied</option>
+            <option value="cta">Replace with CTA when denied</option>
+          </select>
+          <input id="g-cta-text" placeholder="CTA text (e.g. Upgrade to Pro)" />
+          <input id="g-cta-url" placeholder="CTA URL (https://… or /upgrade)" />
+          <label class="check"><input type="checkbox" id="g-critical" /> Sensitive: server-verified content</label>
+          <textarea id="g-html" class="hidden" rows="5" placeholder="Protected HTML delivered only after server-side tier verification"></textarea>
+          <div class="row"><button id="g-save" class="btn primary">Save rule</button><button id="g-cancel" class="btn">Clear</button></div>
+        </div>
+      </section>
+
+      <section data-panel="tiers" class="card hidden">
+        <h2>Tiers</h2>
+        <table class="grid"><thead><tr><th>Name</th><th>Rank</th><th>Native access group</th><th></th></tr></thead><tbody id="t-body"></tbody></table>
+        <h3>Add tier</h3>
+        <div class="row">
+          <input id="t-name" placeholder="Name" />
+          <input id="t-rank" type="number" placeholder="Rank" />
+          <select id="t-group"></select>
+          <button id="t-add" class="btn primary">Add</button>
+        </div>
+      </section>
+
+      <section data-panel="fields" class="card hidden">
+        <h2>Profile and directory fields</h2>
+        <table class="grid"><thead><tr><th>Key</th><th>Label</th><th>Type</th><th>In directory</th><th>Filter</th><th></th></tr></thead><tbody id="f-body"></tbody></table>
+        <h3>Add field</h3>
+        <div class="row">
+          <input id="f-key" placeholder="key (company)" />
+          <input id="f-label" placeholder="Label" />
+          <select id="f-type"><option value="text">Text</option><option value="textarea">Textarea</option><option value="select">Select</option></select>
+          <input id="f-options" placeholder="Select options, comma separated" />
+        </div>
+        <div class="row">
+          <label class="check"><input type="checkbox" id="f-visible" /> Show in directory</label>
+          <label class="check"><input type="checkbox" id="f-filter" /> Filterable</label>
+          <button id="f-add" class="btn primary">Add field</button>
+        </div>
+        <h3>Directory approvals</h3>
+        <p class="muted">Members who opted in appear in the directory only after approval (use the Members tab).</p>
+      </section>
+
+      <section data-panel="audit" class="card hidden">
+        <h2>Audit log</h2>
+        <table class="grid"><thead><tr><th>When</th><th>Member</th><th>Change</th><th>Source</th><th>Actor</th><th>Detail</th></tr></thead><tbody id="a-body"></tbody></table>
+        <div class="row"><button id="a-prev" class="btn">Newer</button><span id="a-page" class="muted"></span><button id="a-next" class="btn">Older</button></div>
+      </section>
+    </div>
+  </div>
+  <script src="./panel.js"></script>
+</body>
+</html>

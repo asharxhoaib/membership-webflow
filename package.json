@@ -1,0 +1,28 @@
+{
+  "name": "membership-webflow",
+  "version": "1.0.0",
+  "description": "Webflow App that extends Webflow Memberships with tier-based gating rules, member self-service, and a member directory.",
+  "private": true,
+  "main": "server/index.ts",
+  "scripts": {
+    "dev": "ts-node server/index.ts",
+    "start": "node dist/server/index.js",
+    "build": "tsc -p tsconfig.json"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "cookie-parser": "^1.4.6",
+    "dotenv": "^16.4.5",
+    "better-sqlite3": "^11.1.2",
+    "uuid": "^9.0.1"
+  },
+  "devDependencies": {
+    "typescript": "^5.5.4",
+    "ts-node": "^10.9.2",
+    "@types/express": "^4.17.21",
+    "@types/cookie-parser": "^1.4.7",
+    "@types/node": "^20.14.9",
+    "@types/better-sqlite3": "^7.6.11",
+    "@types/uuid": "^9.0.8"
+  }
+}

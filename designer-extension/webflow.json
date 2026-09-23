@@ -1,0 +1,7 @@
+{
+  "name": "membership-webflow",
+  "displayName": "Membership Tools",
+  "size": "large",
+  "entrypoint": "index.html",
+  "permissions": ["site.read", "elements.write"]
+}
